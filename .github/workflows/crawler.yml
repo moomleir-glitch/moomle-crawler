@@ -1,1 +1,30 @@
 
+name: Moomle Crawler Bot
+
+on:
+  schedule:
+    - cron: "0 3 * * *"   # هر روز ساعت ۳ صبح UTC
+  workflow_dispatch:     # اجرای دستی
+
+jobs:
+  crawl:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: 📥 Checkout repo
+        uses: actions/checkout@v4
+
+      - name: 🐍 Setup Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+
+      - name: 📦 Install dependencies
+        run: |
+          pip install -r requirements.txt
+
+      - name: 🚀 Run crawler
+        env:
+          MOOMLE_API_TOKEN: ${{ secrets.MOOMLE_API_TOKEN }}
+        run: |
+          python crawler_bot.py
